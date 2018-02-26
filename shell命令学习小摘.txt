@@ -1,0 +1,90 @@
+find
+    1、查找目录下面大于100M的文件：
+        find / -type f -size +100M
+    2、删除目录下面大于100M的文件：
+        find / -type f -size +100M -delete
+    3、显示目录下面大于100M的文件具体大小：
+        find / -type f -size +100M -exec ls -hl {} \;
+    4、显示7天内被访问的文件：
+        find / -type f -atime -7
+xargs
+    该命令把从stdin接收到的数据重新格式化，再将其作为参数提供给其他命令。
+    1、显示目录下面大于100M的文件具体大小：
+        find / -type f -size +100M | xargs ls -hl
+        
+tr
+    tr可以对来自标准输入的内容进行字符替换、字符删除以及重复字符压缩。
+    1、转换，小写改大写，将一个集合映射成另外一个集合：
+        echo "heLLo World!" | tr 'a-z' 'A-Z'
+    2、删除集合数据，删除数字：
+        echo "hello 123 world 567!" | tr -d '0-9'
+    3、取补集，留下空格和数字、换行：
+        echo "hello 123 world 567!" | tr -d -c '0-9 \n'
+    4、压缩空格和数字：
+        echo "hello    1233334  world!" | tr -s ' 0-9'
+chattr
+    能够将文件设置成不可修改。
+    1、设置文件不可修改
+        chattr +i file
+    2、去除文件不可修改属性
+        chattr -i file
+        
+diff、patch
+    1、打patch
+        diff -u file1 file2 > patch.patch
+    2、patch还原
+        patch -p1 file2 < patch.patch
+
+alias
+    1、命名别名
+        alias new_command='command sequence'
+    2、把别名初始化有效
+        echo '' >> ~/.bashrc
+        source ~/.bashrc
+        
+grep
+    1、在文件下搜索字段：
+        grep "pattern" filename
+    2、匹配特殊的某些字段：
+        grep -E "[a-z]+" filename
+    3、打印包含match_pattern行之外的所有行：
+        grep -v match_pattern file
+    4、统计文件包含匹配字符串的行数：
+        grep -c match_pattern file
+    5、递归搜索
+        grep "hello" ./ -R -n
+    6、忽略大小写：
+        grep -i ""
+    7、打印匹配文本之后的N行
+        grep match_pattern filename -A 3
+    8、打印匹配文本之前的N行
+        grep match_pattern filename -B 3
+cut
+    文本按列进行切割
+    
+sed
+    1、字符串替换，替换的是stdin里流
+        sed 's/pattern/replace_string/' filename
+    2、替换文本里字符串
+        sed -i 's/pattern/replace_string/' filename
+    3、以上替换的第一处匹配内容，要替换文本里所有匹配字符串---->为啥实验的时候不一样，2命令就全部替换了？
+        sed -i 's/pattern/replace_string/g' filename
+        
+fping
+    1、查看某个网段在用ip情况-alive,把信息导入文件查看较好，不然会有干扰
+        fping -g 172.18.34.1 172.18.34.254 -a > 1.txt
+    2、查看空闲ip-unreachable：
+        fping -g 172.18.34.1 172.18.34.254 -u > 1.txt
+        
+nc
+    查看远程主机哪些端口有打开：
+        nc -zv 172.18.34.43 1-65535 |& grep succeeded
+        
+参数：
+    $0 	当前脚本的文件名
+    $n 	传递给脚本或函数的参数。n 是一个数字，表示第几个参数。例如，第一个参数是1，第二个参数是2。
+    $# 	传递给脚本或函数的参数个数。
+    $* 	传递给脚本或函数的所有参数。
+    $@ 	传递给脚本或函数的所有参数。被双引号(" ")包含时，与 $* 稍有不同，下面将会讲到。
+    $? 	上个命令的退出状态，或函数的返回值。
+    $$ 	当前Shell进程ID。对于 Shell 脚本，就是这些脚本所在的进程ID。
